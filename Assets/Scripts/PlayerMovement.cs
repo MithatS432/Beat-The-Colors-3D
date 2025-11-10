@@ -36,6 +36,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float jumpForce = 7f;
     private bool isGrounded;
     private float rotateSpeed = 100f;
+    public AudioClip ballSound;
 
     void Start()
     {
