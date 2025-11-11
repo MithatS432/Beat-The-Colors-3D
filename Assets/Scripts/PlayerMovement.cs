@@ -16,20 +16,23 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("UI Settings")]
     public Button pauseButton;
-    public Button continueButton;
+    public Button resumeButton;
     public Button exitButton;
 
-    [Header("Character Settings")]
-    private int score = 0;
-    public int waveCount = 1;
-    private int health = 3;
-    public int ballCount = 5;
-    public string ballColor = "Red";
+
     public TMP_Text scoreText;
     public TMP_Text waveText;
     public TMP_Text healthText;
     public TMP_Text ballCountText;
     public TMP_Text ballColorText;
+
+    [Header("Character Settings")]
+    public int score = 0;
+    public int waveCount = 1;
+    public int health = 3;
+    public int ballCount = 5;
+    public string[] ballColor = new string[] { "Red", "Blue", "Green", "Yellow", "Purple", "Orange" };
+    public string currentBallColor = "Red";
 
     [Header("Movement Settings")]
     [SerializeField] private float moveSpeed = 10f;
@@ -42,22 +45,19 @@ public class PlayerMovement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         audioSource = GetComponent<AudioSource>();
-
-        playerCamera.enabled = !isUsingSecondaryCamera;
-        secondaryCamera.enabled = isUsingSecondaryCamera;
+        UpdateUI();
     }
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.C))
-        {
             ToggleCameras();
-        }
 
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
-        {
             Jump();
-        }
+
+        if (health <= 0)
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     private void FixedUpdate()
@@ -80,29 +80,72 @@ public class PlayerMovement : MonoBehaviour
         playerCamera.enabled = !isUsingSecondaryCamera;
         secondaryCamera.enabled = isUsingSecondaryCamera;
     }
-
+    public void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            isGrounded = true;
+        }
+    }
     public void PauseGame()
     {
         Time.timeScale = 0f;
     }
-
-    public void ContinueGame()
+    public void ResumeGame()
     {
         Time.timeScale = 1f;
     }
-
     public void ExitGame()
     {
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-#else
         Application.Quit();
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
 #endif
     }
 
-    private void OnCollisionEnter(Collision other)
+    public void CollectBall(string collectedColor)
     {
-        if (other.gameObject.CompareTag("Ground"))
-            isGrounded = true;
+        if (collectedColor == currentBallColor)
+        {
+            score += 15;
+
+            ballCount--;
+            audioSource.PlayOneShot(ballSound);
+
+            if (ballCount <= 0)
+            {
+                waveCount++;
+                ballCount += 2;
+
+                string newColor;
+                do
+                {
+                    newColor = ballColor[Random.Range(0, ballColor.Length)];
+                } while (newColor == currentBallColor);
+
+                currentBallColor = newColor;
+            }
+        }
+        else
+        {
+            TakeDamage(1);
+        }
+
+        UpdateUI();
+    }
+
+    public void TakeDamage(int amount)
+    {
+        health -= amount;
+        UpdateUI();
+    }
+
+    public void UpdateUI()
+    {
+        ballCountText.text = "Balls:" + ballCount.ToString();
+        waveText.text = "Wave:" + waveCount.ToString();
+        scoreText.text = "Score:" + score.ToString();
+        healthText.text = health.ToString();
+        ballColorText.text = currentBallColor;
     }
 }

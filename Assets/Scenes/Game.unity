@@ -867,7 +867,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 35, y: -77}
+  m_AnchoredPosition: {x: 34.9, y: -77}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &557347797
@@ -1548,7 +1548,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 87.3, y: 114.9}
+  m_AnchoredPosition: {x: 52.6, y: 114.9}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1025180121
@@ -3057,7 +3057,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 2056140381}
         m_TargetAssemblyTypeName: PlayerMovement, Assembly-CSharp
-        m_MethodName: ContinueGame
+        m_MethodName: ResumeGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3259,19 +3259,28 @@ MonoBehaviour:
   secondaryCamera: {fileID: 835691072}
   isUsingSecondaryCamera: 0
   pauseButton: {fileID: 1359004606}
-  continueButton: {fileID: 2046222566}
+  resumeButton: {fileID: 2046222566}
   exitButton: {fileID: 1528917037}
-  waveCount: 1
-  ballCount: 5
-  ballColor: Red
   scoreText: {fileID: 2109916496}
   waveText: {fileID: 26040503}
   healthText: {fileID: 247526616}
   ballCountText: {fileID: 557347797}
   ballColorText: {fileID: 1025180121}
+  score: 0
+  waveCount: 1
+  health: 3
+  ballCount: 5
+  ballColor:
+  - Red
+  - Blue
+  - Green
+  - Yellow
+  - Orange
+  - Purple
+  currentBallColor: Red
   moveSpeed: 10
   jumpForce: 7
-  ballSound: {fileID: 0}
+  ballSound: {fileID: 8300000, guid: fac29c1744ee2bb4c97668eec6183681, type: 3}
 --- !u!82 &2056140382
 AudioSource:
   m_ObjectHideFlags: 0
@@ -3283,7 +3292,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: fac29c1744ee2bb4c97668eec6183681, type: 3}
+  m_Resource: {fileID: 8300000, guid: 1bb550ee002ab7d40bcc31d79e661013, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
