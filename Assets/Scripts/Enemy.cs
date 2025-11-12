@@ -33,7 +33,7 @@ public class Enemy : MonoBehaviour
             PlayerMovement player = other.GetComponent<PlayerMovement>();
             if (player != null)
             {
-                if (ballColor == player.currentBallColor)
+                if (player.isPowerUpActive || ballColor == player.currentBallColor)
                 {
                     player.CollectBall(ballColor);
                 }
