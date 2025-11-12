@@ -5,7 +5,7 @@ public class Enemy : MonoBehaviour
     private AudioSource audioSource;
     public float speed = 20f;
     public string ballColor;
-    public bool isTrueColor = false; // Castle'a ulaştığında ses çalacak
+    public bool isTrueColor = false;
 
     void Start()
     {
@@ -21,13 +21,12 @@ public class Enemy : MonoBehaviour
     {
         if (other.CompareTag("Castle"))
         {
-            if (isTrueColor && audioSource != null)
-                audioSource.Play();
+            if (isTrueColor)
+                AudioSource.PlayClipAtPoint(audioSource.clip, transform.position);
 
             Destroy(gameObject);
         }
 
-        // Enemy.cs
 
         if (other.CompareTag("Player"))
         {

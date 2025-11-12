@@ -122,7 +122,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4860223cf0d0eca49ad9797605746855, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 23
+  speed: 31
   ballColor: Purple
   isTrueColor: 0
 --- !u!82 &-4508235045090667444

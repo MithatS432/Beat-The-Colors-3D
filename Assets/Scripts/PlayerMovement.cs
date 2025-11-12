@@ -2,12 +2,16 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
+using System.Collections;
 
 public class PlayerMovement : MonoBehaviour
 {
     [Header("Components")]
     private Rigidbody rb;
-    private AudioSource audioSource;
+    private Renderer rend;
+    public Color damageColor = Color.red;
+    private Color normalColor;
+
 
     [Header("Camera Settings")]
     public Camera playerCamera;
@@ -40,11 +44,18 @@ public class PlayerMovement : MonoBehaviour
     private bool isGrounded;
     private float rotateSpeed = 100f;
     public AudioClip ballSound;
+    public AudioClip wrongBallSound;
+    [Header("Ball Collect Effects")]
+    public GameObject correctBallEffect;
+    public GameObject wrongBallEffect;
+
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        audioSource = GetComponent<AudioSource>();
+        rend = GetComponent<Renderer>();
+        normalColor = rend.material.color;
+        rend.material = new Material(rend.material);
         UpdateUI();
     }
 
@@ -110,7 +121,18 @@ public class PlayerMovement : MonoBehaviour
             score += 15;
 
             ballCount--;
-            audioSource.PlayOneShot(ballSound);
+            AudioSource.PlayClipAtPoint(ballSound, transform.position);
+
+            if (correctBallEffect != null)
+            {
+                GameObject effect = Instantiate(correctBallEffect, transform.position + Vector3.up, Quaternion.identity);
+                Debug.Log("Correct effect spawned at: " + effect.transform.position);
+                Destroy(effect, 2f);
+            }
+            else
+            {
+                Debug.LogWarning("correctBallEffect prefab'i atanmamış!");
+            }
 
             if (ballCount <= 0)
             {
@@ -128,6 +150,20 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
+            if (wrongBallEffect != null)
+                AudioSource.PlayClipAtPoint(wrongBallSound, transform.position);
+
+            if (wrongBallEffect != null)
+            {
+                GameObject wrongEffect = Instantiate(wrongBallEffect, transform.position + Vector3.up, Quaternion.identity);
+                Debug.Log("Wrong effect spawned at: " + wrongEffect.transform.position);
+                Destroy(wrongEffect, 2f);
+            }
+            else
+            {
+                Debug.LogWarning("wrongBallEffect prefab'i atanmamış!");
+            }
+
             TakeDamage(1);
         }
 
@@ -137,8 +173,17 @@ public class PlayerMovement : MonoBehaviour
     public void TakeDamage(int amount)
     {
         health -= amount;
+        StartCoroutine(FlashDamageColor());
         UpdateUI();
     }
+    private IEnumerator FlashDamageColor()
+    {
+        rend.material.color = damageColor;
+        yield return new WaitForSeconds(0.2f);
+        rend.material.color = normalColor;
+    }
+
+
 
     public void UpdateUI()
     {
